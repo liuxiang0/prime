@@ -27,8 +27,16 @@ def sum_of_primes(self): 小于n的所有质数之和
 class Prime(object):
     """    This is Prime class(素数 类的定义)    """
 
-    def __init__(self, n):
+    def __init__(self, n=2):
+        if n < 2:
+            raise ValueError("Input number can not be less than 2!")
         self._prime = n
+        self._name = "Prime"
+
+    def __str__(self):
+        return self._name
+
+    __repr__ = __str__
 
     @property
     def prime(self):
