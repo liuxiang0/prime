@@ -6,14 +6,22 @@ Created on Sat May 12 21:33:11 2018
 Test Prime Package
 
 """
-from Primes import primes_generator, MPLLtest, number_of_digital
-
+from primespy import primes_generator, is_mersenne, number_of_digital
+from primespy import primes_sieve
 import time
 from  os import path as osp
 
-# test data        
-if __name__ == '__main__' :
-    
+
+def test_primes_sieve():
+    LIMIT = 10**6
+    s = time.time()
+    primes = primes_sieve(LIMIT)
+    plist=[i for i, x in enumerate(primes) if x]
+    print("Elapsed(s): {T}.".format(T=time.time() - s))
+    print(plist)
+    print("Count is {C}, Sum is {S}.".format(C=len(plist), S=sum(plist)))
+
+def test_primes_generator():
     if not osp.exists('mesernneprime.txt') :
         outfile = open('mesernneprime.txt','w')
     else:
@@ -26,11 +34,11 @@ if __name__ == '__main__' :
     # print the above prime list 
     print( primelist)
     # start time for running
-    start_time = time.time()
+    start = time.time()
 
     outfile.write("Testing, time = %s \n" % time.strftime("%Y-%m-%d %H:%M:%S"))
     for pm in primelist:  # every i is prime
-        if MPLLtest(pm):  # Mesernne Prime Testing by Lucas_Lehmer_Test
+        if is_mersenne(pm):  # Mesernne Prime Testing by Lucas_Lehmer_Test
             mp = 2**pm -1
             outfile.write("DC={d}, MP=2^{p}-1={mp} \n".format(
                 d = number_of_digital(mp), p=pm, mp=mp)
@@ -40,9 +48,15 @@ if __name__ == '__main__' :
                 )
     
     outfile.write("Finished, time = %s \n" % time.strftime("%Y-%m-%d %H:%M:%S"))
-    outfile.write("Finished, elasped time: %d seconds. \n " % (time.time()-start_time))
+    outfile.write("Finished, elasped(s): %d. \n " % (time.time()-start))
     
     outfile.close()
+
+
+# test data        
+if __name__ == '__main__':
+    test_primes_sieve()
+    test_primes_generator
     """
     if sys.argv[1].startswith('-'):
         option = sys.argv[1][1:]
