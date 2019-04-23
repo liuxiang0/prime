@@ -2,11 +2,11 @@
 """
 Created on Sat May 12 21:33:11 2018
 
-@author: abc
-Test Prime Class
+@author: liu xiang
+Test Prime Package
 
 """
-from primes import Prime
+from Primes import primes_generator, MPLLtest, number_of_digital
 
 import time
 from  os import path as osp
@@ -19,22 +19,25 @@ if __name__ == '__main__' :
     else:
         outfile = open('mesernneprime.txt','a')
         
-    p = Prime(4000)   # if n =4000, elasped time = 49secondes in my notebook ThinkPad E450
-    primes = p.PrimesList()  # get prime list between [2,4000]
-    primelist = list(primes) # change iteration to list
+    primes_max = 5000
+    # if n =4000, elasped time = 49seconds in my notebook ThinkPad E450
+    primes_gen = primes_generator(limit = primes_max)  # get prime list between [2,4000]
+    primelist = list(primes_gen) # change iteration to list
     # print the above prime list 
     print( primelist)
     # start time for running
     start_time = time.time()
+
     outfile.write("Testing, time = %s \n" % time.strftime("%Y-%m-%d %H:%M:%S"))
-   
-    for i in primelist:  # every i is prime
-        if p.MPLLtest(i):  # Mesernne Prime Testing by Lucas_Lehmer_Test
-            mp = 2**i -1
-            tmp = Prime(mp)
-            outfile.write("DC=%d, MP(%d) = 2**%d-1 = %d \n" % (tmp.NumberofDigital(),i,i,mp))
-            print("MP=2**%d-1=%d is Mersenne Prime!\n" % (i,2**i-1))
-   
+    for pm in primelist:  # every i is prime
+        if MPLLtest(pm):  # Mesernne Prime Testing by Lucas_Lehmer_Test
+            mp = 2**pm -1
+            outfile.write("DC={d}, MP=2^{p}-1={mp} \n".format(
+                d = number_of_digital(mp), p=pm, mp=mp)
+                )
+            print("MP=2^{p}-1={m} is Mersenne Prime!\n".format(
+                p=pm, m=2**pm-1)
+                )
     
     outfile.write("Finished, time = %s \n" % time.strftime("%Y-%m-%d %H:%M:%S"))
     outfile.write("Finished, elasped time: %d seconds. \n " % (time.time()-start_time))

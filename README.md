@@ -12,7 +12,7 @@ Property:
 
 Method：
 bool is_prime(self) :     质数判断函数，True为质数，否则不是质数
-bool MPLLtest(self,p):        Lucas_Lehmer_Test(p) 梅森素数2**p-1判断法，p为素数
+bool MPLLtest(self,p):    Lucas_Lehmer_Test(p) 梅森素数2**p-1判断法，p为素数
 def  number_of_digital(self):   计算超大正整数n的位数
      all_primes(self,start=2) :  大于start的质数无穷序列，generator of infinite primes list
      primes_between(self,start=2,end=5) : 得到[start,end]之间的质数序列，generator
