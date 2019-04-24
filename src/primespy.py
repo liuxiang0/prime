@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
-Created on Sat May 12 21:33:29 2018
+Created on Sat May 12 21:33:29 2019
+Modified on Wed April 24 14:01 2019
 @author: Liu Xiang
 @email : liuxiangxyd@163.com
 filename: primespy.py
@@ -14,6 +15,8 @@ bool MPLLtest(p): Lucas_Lehmer_Test(p) 梅森素数2**p-1判断法，p为素数
 genrator primes_generator(start=2, limit=float("inf")): generate infinite primes
 """
 
+
+import time
 
 def number_of_digital(any_integer):
     """
@@ -95,9 +98,8 @@ def is_prime(N):
 
 
 def primes(n, filename=None):
-    """List all primes below n
+    """List all primes below n"""
 
-    """
     pl = primes_generator(2, n)
     if filename is None:
         print("Primes list (less than {p}) is below.".format(p=n))
@@ -107,20 +109,25 @@ def primes(n, filename=None):
             outf.write("Primes list (less than {p}) is below.\n".format(p=n))
             outf.write(str(list(pl)))
             outf.close()
+    return 
 
 def primes_start(start, n, filename=None): 
-    """List of prime numbers from start up to n.
+    """List of prime numbers from start up to n."""
 
-    """
     pl = primes_generator(start, n)
     if filename is None:
         print("Primes list [{s},{e}).".format(s=start, e=n))
-        print(list(pl))
+        result = list(pl)
+        print(result)
     else:
         with open(filename,'w') as outf:
             outf.write("Primes list [{s},{e}).\n".format(s=start, e=n))
-            outf.write(str(list(pl)))
+            result = list(pl)
+            outf.write(str(result))
             outf.close()
+    
+    return result
+
 
 def primes_sum_count(n):
     """The summation of prime numbers from 2 up to n, 
@@ -145,7 +152,10 @@ def primes_sum_count_start(start, n):
 def primes_nth(n):
     """The nth prime number.
     """
-    nth = abs(n)
+    pl = primes_generator(2)
+    for _ in range(n-1):
+        next(pl)
+    return(next(pl))
     
 
 def primes_sieve(limit):
@@ -160,6 +170,9 @@ def primes_sieve(limit):
             for n in range(i*i, limit, 2*i):
                 a[n] = False
     return a
+
+
+
 
 def is_prime_bakup(number):
     """ 如果用 平方 和 while 循环，参见下面：
@@ -177,30 +190,4 @@ def is_prime_bakup(number):
 
 
 if __name__ == '__main__':
-    max_p = 1000000
-    output_file = 'primes_list' + str(max_p) + '.txt'
-
-    primes(max_p, filename=output_file)
-
-    '''
-    p = primes_generator(2, max_p)
-    pList = list(p)  # after list(p), p is None
-    MPlist=[]
-    for v in pList:
-        if is_mersenne(v):
-            MPlist.append(v)
-        #print("Mersenne 2**{val}-1 is prime? {Bool}".format(val=v, Bool=MPLLtest(v)))
-    
-    sum_primes = sum(pList)
-    count_primes = len(pList)
-    print("sum of primes is {s}, count of primes is {c}".format(s=sum_primes, c=count_primes))
-    
-    with open(output_file, mode='a') as fw:
-        fw.write("Mersenne prime list: 2^p-1, where p include the following primes list \n")
-        fw.write(str(MPlist)+'\n')
-        fw.write("primes less than " + str(max_p)+'\\')
-        fw.write("sum is " + str(sum_primes)+'\\')
-        fw.write("count is " + str(count_primes)+'\\')
-        fw.write("primes percentage(%): " + str(count_primes/max_p*100)+'\n\n')
-        fw.close()
-    '''
+    pass

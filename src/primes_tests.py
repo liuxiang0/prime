@@ -7,13 +7,14 @@ Test Prime Package
 
 """
 from primespy import primes_generator, is_mersenne, number_of_digital
-from primespy import primes_sieve
+from primespy import primes_sieve, primes_nth, primes
 import time
 from  os import path as osp
 
 
-def test_primes_sieve():
-    LIMIT = 10**6
+def test_primes_sieve(n):
+    #LIMIT = 10**6
+    LIMIT = n
     s = time.time()
     primes = primes_sieve(LIMIT)
     plist=[i for i, x in enumerate(primes) if x]
@@ -21,13 +22,14 @@ def test_primes_sieve():
     print(plist)
     print("Count is {C}, Sum is {S}.".format(C=len(plist), S=sum(plist)))
 
-def test_primes_generator():
+def test_primes_generator(n):
     if not osp.exists('mesernneprime.txt') :
         outfile = open('mesernneprime.txt','w')
     else:
         outfile = open('mesernneprime.txt','a')
         
-    primes_max = 5000
+    #primes_max = 5000
+    primes_max = n
     # if n =4000, elasped time = 49seconds in my notebook ThinkPad E450
     primes_gen = primes_generator(limit = primes_max)  # get prime list between [2,4000]
     primelist = list(primes_gen) # change iteration to list
@@ -41,10 +43,10 @@ def test_primes_generator():
         if is_mersenne(pm):  # Mesernne Prime Testing by Lucas_Lehmer_Test
             mp = 2**pm -1
             outfile.write("DC={d}, MP=2^{p}-1={mp} \n".format(
-                d = number_of_digital(mp), p=pm, mp=mp)
+                    d = number_of_digital(mp), p=pm, mp=mp)
                 )
             print("MP=2^{p}-1={m} is Mersenne Prime!\n".format(
-                p=pm, m=2**pm-1)
+                    p=pm, m=2**pm-1)
                 )
     
     outfile.write("Finished, time = %s \n" % time.strftime("%Y-%m-%d %H:%M:%S"))
@@ -53,10 +55,47 @@ def test_primes_generator():
     outfile.close()
 
 
+def test_mersenne_prime(n):
+    pass
+
+
+def test_primes_nth(n):
+    """
+    Testing primes_nth(10000)=104729, Elasped time(s):0.2312018871307373
+    Testing primes_nth(100000)=1299709, Elasped time(s):7.670881032943726
+    Testing primes_nth(1000000)=15485863, Elasped time(s):248.56228494644165
+    """
+    # Begin Testing primes_nth(n)
+    start = time.time()
+    pn    = primes_nth(n)
+    end   = time.time()
+    print("Testing primes_nth({n})={p}, Elasped time(s):{T}".format(
+            n=n, p=pn, T=end-start)
+        )
+    # End testing primes_nth(n)
+
+def test_primes(n):
+    # Begin testing primes(n, filename=None)
+    max_p = n
+    output_file = 'primes_list' + str(max_p) + '.txt'
+    start = time.time()
+    primes(max_p, filename=output_file)
+    end   = time.time()
+    print("Testing primes({n}, filename={f}), elasped time(s):{T}".format(
+            n=max_p, f=output_file, T=end-start)
+        )
+    # end testing primes(n, filename=None)
+
 # test data        
 if __name__ == '__main__':
-    test_primes_sieve()
-    test_primes_generator
+    n = 10**5
+    test_primes_sieve(n)
+    
+    test_primes_nth(n)
+    test_primes(n)
+    
+    test_primes_generator(n)
+
     """
     if sys.argv[1].startswith('-'):
         option = sys.argv[1][1:]

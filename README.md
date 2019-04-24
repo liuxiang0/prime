@@ -33,6 +33,51 @@ def  number_of_digital(self):   计算超大正整数n的位数
      primes_list(self) :  得到指定范围[lower, upper)内的所有质数列表List，开闭区间的所有质数列表
 def sum_of_primes(self): 小于n的所有质数之和
 
+## SymPy
+
+**SymPy** is another choice. It is a Python library for symbolic mathematics. It provides several functions for prime.
+Functions |Descriptions
+----------|------------
+isprime(n)|# Test if n is a prime number (True) or not (False).
+primerange(a, b)|# Generate a list of all prime numbers in the range [a, b).
+randprime(a, b)|# Return a random prime number in the range [a, b).
+primepi(n)|# Return the number of prime numbers less than or equal to n.
+prime(nth)|# Return the nth prime, with the primes indexed as prime(1) = 2. The nth prime is approximately n*log(n) and can never be larger than 2**n.
+prevprime(n, ith=1)|# Return the largest prime smaller than n
+nextprime(n)|# Return the ith prime greater than n
+sieve.primerange(a, b)|# Generate all prime numbers in the range [a, b), implemented as a dynamically growing sieve of Eratosthenes. 
+
+## [Examples][2]
+
+~~~python
+    >>> from primesieve import *
+
+    # Generate a list of the primes below 40
+    >>> generate_primes(40)
+    [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]
+
+    # Generate a list of the primes between 100 and 120
+    >>> generate_primes(100, 120)
+    [101, 103, 107, 109, 113]
+
+    # Generate a list of the first 10 primes
+    >>> generate_n_primes(10)
+    [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+
+    # Generate a list of the first 10 starting at 1000
+    >>> generate_n_primes(10, 1000)
+    [1009, 1013, 1019, 1021, 1031, 1033, 1039, 1049, 1051, 1061]
+
+    # Get the 10th prime
+    >>> nth_prime(10)
+    29
+
+    # Count the primes below 10**9
+    >>> count_primes(10**9)
+    50847534
+~~~
+
 [More information reference][1]
 
 [1]:https://stackoverflow.com/questions/2068372/fastest-way-to-list-all-primes-below-n/33356284#33356284
+[2]:https://stackoverflow.com/questions/13326673/is-there-a-python-library-to-list-primes
