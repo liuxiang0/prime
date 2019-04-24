@@ -46,6 +46,13 @@ np_sieve_primes3a(100000000), Time(s):3.70415997505188
 Primes count: 5761455 and sum: 279209790387276
 np_sieve_primes6(100000000), Time(s):1.1421229839324951
 Primes count: 5761455 and sum: 279209790387276
+
+np_sieve_primes3a(100000000), Time(s):3.614898920059204
+Primes count: 5761455 and sum: 279209790387276
+np_sieve_primes3b(100000000), Time(s):3.4135758876800537
+Primes count: 5761455 and sum: 279209790387276
+np_sieve_primes6(100000000), Time(s):2.111391067504883
+Primes count: 5761455 and sum: 279209790387276
 """
 
 
@@ -95,18 +102,40 @@ def np_sieve_primes3a(upto):
     No module needed.
     """
     mat = np.ones((upto), dtype=bool)  # initial all postion True
-    mat[0] = False
-    mat[1] = False
-    mat[4::2] = False  # let all even (>4) position is False
+    mat[0] = mat[1] = 0
+    mat[4::2] = 0  # let all even (>4) position is False
+
     upper = int(upto ** 0.5)
     for idx in range(3, upper + 1, 2):
-        mat[idx*2::idx] = False  # reject the idx's multiple
-    return np.where(mat == True)[0]
+        mat[idx*idx::idx] = 0  # reject the idx's multiple
+    return np.where(mat == 1)[0]
+
+
+
+def np_sieve_primes3b(upto):
+    """It sieves a Boolean array referring to its indices only and 
+    elicits prime numbers from the indices of all True values. 
+    No module needed.
+    """
+    mat = np.ones((upto), dtype=bool)  # initial all postion True
+    mat[0] = mat[1] = 0
+    # mat[4::2] = 0  # first delete all even number except 2
+    upper = int(upto ** 0.5)
+
+    small_primes = [2, 3, 5, 7]  # , 11, 13, 17, 19]  # ,23]
+    for p in small_primes:
+        mat[p*p::p] = 0  # let all multiple of a prime (>=4) position is False
+    
+    for idx in range(11, upper + 1, 2):
+        mat[idx*idx::idx] = 0  # reject the idx's multiple
+    return np.where(mat == 1)[0]
 
 
 def np_sieve_primes6(upto):
-    primes=np.arange(3, upto+1, 2)
-    isprime=np.ones(int((upto-1)/2), dtype=bool)
+    """This is one of the best algorithm"""
+
+    primes=np.arange(3, upto+1, 2)  # odd series below upto
+    isprime=np.ones(int((upto-1)/2), dtype=bool)  # inital 1
     upper = int(upto**0.5)
     for factor in primes[:upper]:
         if isprime[int((factor-2)/2)]: 
@@ -117,7 +146,7 @@ def np_sieve_primes6(upto):
 
 if __name__=='__main__':
     n = 10**8
-
+    
     start = time.time()
     result = rwh_primes2(n)
     end = time.time()
@@ -134,6 +163,12 @@ if __name__=='__main__':
     result = np_sieve_primes3a(n)
     end = time.time()
     print("np_sieve_primes3a({n}), Time(s):{T}".format(n=n, T=end-start))
+    print("Primes count: {c} and sum: {s}".format(c=len(result), s=sum(result)))
+    
+    start = time.time()
+    result = np_sieve_primes3b(n)
+    end = time.time()
+    print("np_sieve_primes3b({n}), Time(s):{T}".format(n=n, T=end-start))
     print("Primes count: {c} and sum: {s}".format(c=len(result), s=sum(result)))
     
     start = time.time()
