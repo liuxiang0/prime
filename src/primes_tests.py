@@ -7,17 +7,18 @@ Test Prime Package
 
 """
 from primespy import primes_generator, is_mersenne, number_of_digital
-from primespy import primes_sieve, primes_nth, primes
+from primespy import primes_sieve1, primes_nth, primes
+from primespy import rwh_primes2_python3, np_sieve_primes3a, np_sieve_primes3b, np_sieve_primes6
+from primespy import rwh_primes2
 import time
 from  os import path as osp
 
 
-def test_primes_sieve(n):
+def test_primes_sieve1(n):
     #LIMIT = 10**6
     LIMIT = n
     s = time.time()
-    primes = primes_sieve(LIMIT)
-    plist=[i for i, x in enumerate(primes) if x]
+    plist = primes_sieve1(LIMIT)
     print("Elapsed(s): {T}.".format(T=time.time() - s))
     print(plist)
     print("Count is {C}, Sum is {S}.".format(C=len(plist), S=sum(plist)))
@@ -89,12 +90,46 @@ def test_primes(n):
 # test data        
 if __name__ == '__main__':
     n = 10**5
-    test_primes_sieve(n)
+    test_primes_sieve1(n)
     
     test_primes_nth(n)
     test_primes(n)
     
     test_primes_generator(n)
+
+
+    n = 10**8
+
+    start = time.time()
+    result = rwh_primes2_python3(n)
+    end = time.time()
+    print("rwh_primes2_python3({n}), Time(s):{T}".format(n=n, T=end-start))
+    print("Primes count: {c} and sum: {s}".format(c=len(result), s=sum(result)))
+    
+    start = time.time()
+    result = np_sieve_primes3a(n)
+    end = time.time()
+    print("np_sieve_primes3a({n}), Time(s):{T}".format(n=n, T=end-start))
+    print("Primes count: {c} and sum: {s}".format(c=len(result), s=sum(result)))
+    
+    start = time.time()
+    result = np_sieve_primes3b(n)
+    end = time.time()
+    print("np_sieve_primes3b({n}), Time(s):{T}".format(n=n, T=end-start))
+    print("Primes count: {c} and sum: {s}".format(c=len(result), s=sum(result)))
+    
+    start = time.time()
+    result = np_sieve_primes6(n)
+    end = time.time()
+    print("np_sieve_primes6({n}), Time(s):{T}".format(n=n, T=end-start))
+    print("Primes count: {c} and sum: {s}".format(c=len(result), s=sum(result)))
+
+    start = time.time()
+    result = rwh_primes2(n)
+    end = time.time()
+    print("rwh_primes2({n}), Time(s):{T}".format(n=n, T=end-start))
+    print("Primes count: {c} and sum: {s}".format(c=len(result),s=sum(result)))
+
 
     """
     if sys.argv[1].startswith('-'):
