@@ -1,23 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
-Created on Sat May 12 21:33:29 2019
-Modified on Wed April 24 14:01 2019
-@author: Liu Xiang
-@email : liuxiangxyd@163.com
-filename: primespy.py
-including:
-def  number_of_digital(self): 计算超大正整数n的位数
-
-Functions:
-bool is_prime(p) :  质数判断函数，True为质数，否则不是质数
-bool MPLLtest(p): Lucas_Lehmer_Test(p) 梅森素数2**p-1判断法，p为素数
-genrator primes_generator(start=2, limit=float("inf")): generate infinite primes
+Created on Sat May 12 21:33:29 2019  
+Modified on Wed April 24 14:01 2019  
+@author: Liu Xiang  
+@email : liuxiangxyd@163.com  
 
 References:
 1. [The first fifty million primes][https://primes.utm.edu/lists/small/millions/]
 2. [The fastest way to list all primes below n][https://stackoverflow.com/questions/2068372/fastest-way-to-list-all-primes-below-n/3638617#3638617]
-3. 
+
 Comparisons with:
 import primesieve   (1)
 primes = primesieve.generate_primes(10**8)
@@ -40,6 +32,12 @@ compress = itertools.compress
 
 
 def rwh_primes2(n):
+    """Return all primes list below n.
+    
+    >>> rwh_primes2(10)
+    [2, 3, 5, 7]
+
+    """
     correction = (n%6 > 1)
     n = {0:n, 1:n-1,2:n+4, 3:n+3, 4:n+2, 5:n+1}[n%6]
     sieve = [True] * (n//3)
@@ -52,8 +50,13 @@ def rwh_primes2(n):
     return [2,3] + [3*i+1|1 for i in range(1, n//3-correction) if sieve[i]]
 
 
-def rwh_primes2_python3(n):
-    """ Input n>=6, Returns a list of primes, 2 <= p < n """
+def rwh_primes3(n):
+    """ Input n>=6, Returns a list of primes, 2 <= p < n .
+    
+    >>> rwh_primes3(20)
+    [2, 3, 5, 7, 11, 13, 17, 19]
+
+    """
     zero = bytearray([False])
     size = n//3 + (n % 6 == 2)
     sieve = bytearray([True]) * size
@@ -70,17 +73,21 @@ def rwh_primes2_python3(n):
     return ans
 
 
-def number_of_digital(any_integer):
+def digital_number(any_integer):
     """
-    digital_number(n): 获取一个正整数的数字个数
+    获取一个正整数的数字个数.
     原理： 10**(d-1) <= n < 10**d, 表明n有 d个数字
     换算成log10， 得到 d-1 <= log(n) < d, log(n)< d <= log(n)+1
+
+    >>> digital_number(100000)
+    6
+
     """
     from math import log10 as log
 
     # return (int(log(n))+1 if n > 0 else 0)
     n = abs(any_integer)
-    if not n:  # 排除负数和零，实际上可以产生一个ValueError
+    if not n:  # 排除零，实际上可以产生一个ValueError
         return 1
     return int(log(n)) + 1
 
@@ -90,34 +97,43 @@ def is_mersenne(p):
     input: any one prime
     output: True if 2**p-1 is prime else False
     判断 2**p-1是否为梅森素数Mersenne Prime，形如 2**p-1的素数，p为素数
-    Lucas_Lehmer_Test(p)    
-    """
-    # Lucas_Lehmer_Test(p)
-    # if not self.is_prime(self, p):
-    #   raise ValueError
+    Lucas_Lehmer_Test(p)
 
+    >>> is_mersenne(3)
+    True
+
+    >>> is_mersenne(5)
+    True
+
+    >>> is_mersenne(11)
+    False
+
+    """
+ 
     s = 4
-    M = 2 ** p - 1
-    for _ in range(2, p):  # repeat p-2 times
-        s = (s * s - 2) % M
+    M = 2**p - 1
+    for _ in range(2, p):
+        s = (s*s - 2) % M
 
     return not s
-    # True: 2**p-1 is prime
-    # False: 2**p -1 is composite
 
 
 def primes_generator(start=2, limit=float("inf")):
     """
     input: given the first prime
-    output: generate the infinite primes with yield
-    所有素数生成器prime generator，得到==无限循环==的质数序列，从start开始！
-    include 区间素数生成器，得到start与limit之间[start,limit)--闭区间 的质数序列！
+    output: generate the infinite primes with yield(generator)
+    素数生成器prime generator，得到无限质数序列，从start开始！
+    include区间素数生成器，得到start与limit之间[start,limit)闭区间的质数序列
+
+    >>> list(primes_generator(2,20))
+    [2, 3, 5, 7, 11, 13, 17, 19]
+
     """
     s = start  # start variable will not changed
     while True and s < limit:
         if is_prime(s):
             yield s
-        s += 1  # infinite loop
+        s += 1  
 
 
 def is_prime(N):
@@ -128,6 +144,16 @@ def is_prime(N):
     不需要用math.sqrt()函数，改用乘方(**0.5)代替开方sqrt()，
     首先排除素数2和大于2的偶数
     don't use math.sqrt，at first skip all even number except 2
+
+    >>> is_prime(2)
+    True
+
+    >>> is_prime(20)
+    False
+
+    >>> is_prime(-7)
+    True
+
     """
     number = abs(N)
     if number%2 == 0:
@@ -150,27 +176,39 @@ def is_prime(N):
 
 
 def primes(n, filename=None):
-    """List all primes below n"""
+    """List all primes below n.
+    
+    >>> primes(10)
+    [2, 3, 5, 7]
+
+    """
 
     pl = primes_generator(2, n)
     if filename is None:
-        print("Primes list (less than {p}) is below.".format(p=n))
-        print(list(pl))
+        # print("Primes list (less than {p}) is below.".format(p=n))
+        result = list(pl)
+        # print(result)
     else:
         with open(filename,'w') as outf:
             outf.write("Primes list (less than {p}) is below.\n".format(p=n))
-            outf.write(str(list(pl)))
+            result = list(pl)
+            outf.write(str(result))
             outf.close()
-    return 
+    return result
 
 def primes_start(start, n, filename=None): 
-    """List of prime numbers from start up to n."""
+    """List of prime numbers from start up to n.
+    
+    >>> primes_start(10, 20)
+    [11, 13, 17, 19]
+
+    """
 
     pl = primes_generator(start, n)
     if filename is None:
-        print("Primes list [{s},{e}).".format(s=start, e=n))
+        # print("Primes list [{s},{e}).".format(s=start, e=n))
         result = list(pl)
-        print(result)
+        # print(result)
     else:
         with open(filename,'w') as outf:
             outf.write("Primes list [{s},{e}).\n".format(s=start, e=n))
@@ -186,6 +224,11 @@ def primes_sum_count(n):
     and count of prime numbers. 
     The optimal number of threads will be determined 
     for the given number and system.
+    return: sum of primes list and count of primes
+
+    >>> primes_sum_count(10)
+    (17, 4)
+
     """
     pl = list(primes_generator(2, n))
     return sum(pl), len(pl)
@@ -196,6 +239,10 @@ def primes_sum_count_start(start, n):
     and count of prime numbers. 
     The optimal number of threads will be determined 
     for the given numbers and system.
+
+    >>> primes_sum_count_start(10, 20)
+    (60, 4)
+
     """
     pl = list(primes_generator(start, n))
     return sum(pl), len(pl)
@@ -203,73 +250,118 @@ def primes_sum_count_start(start, n):
 
 def primes_nth(n):
     """The nth prime number.
+
+    >>> primes_nth(7)
+    17
+
+    >>> primes_nth(10000)
+    104729
+    
+    >>> primes_nth(100000)
+    1299709
+    
     """
     pl = primes_generator(2)
     for _ in range(n-1):
         next(pl)
-    return(next(pl))
+    return next(pl)
     
 # Several sieve algorithms for fingding primes list
 
 def primes_sieve1(limit):
+    """
+    Sieve method 1 for finding primes list
+
+    >>> primes_sieve1(20)
+    [2, 3, 5, 7, 11, 13, 17, 19]
+
+    """
     a = [True] * limit
     a[0] = a[1] = False
     for n in range(4, limit, 2):
-        a[n] = False  # all even number >=4
-    root_limit = int(limit**.5)+1
-    for i in range(3, root_limit):
+        a[n] = False  # for all even number >=4
+
+    root_limit = int(limit**.5)
+    for i in range(3, root_limit+1, 2):
         if a[i]:
-            a[i*i::2*i] = False  # i*(i+1) is even
-            #for n in range(i*i, limit, 2*i):
-            #    a[n] = False
+            a[i*i::2*i] = [False]*((n-i*i-1)//(2*i)+1)
+
     return [i for i in range(limit) if a[i]]
 
 
 def primes_sieve2(n):
-    """ Returns  a list of primes < n """
+    """ Sieve method 2: Returns  a list of primes < n 
+    
+    >>> primes_sieve2(100)
+    [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
+    
+    """
     sieve = [True] * n
     upper = int(n**0.5)+1
     for i in range(3, upper, 2):
         if sieve[i]:
-            sieve[i*i::2*i]=[False]*((n-i*i-1)//(2*i)+1)
-    return [2] + [i for i in range(3, n, 2) if sieve[i]]
+            sieve[i*i::2*i]=[False]*((n-i*i-1)//(2*i)+1)  
+            # must assign iterable to extended slice sieve[i*i::2*i]
+    return [2] + [i for i in range(3, n, 2) if sieve[i]]  # skip even number>=4
 
 
 def primes_sieve3(n):
-    """ Returns  a list of primes < n """
-    # begin half-sieve
+    """ Sieve method 3: Returns  a list of primes < n 
+    
+    >>> primes_sieve3(100)
+    [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
+    
+    """
+    # begin half-sieve, n>>1 == n//2
     sieve = [True] * (n>>1)
     upper = int(n**0.5)+1
     for i in range(3, upper, 2):
         if sieve[i>>1]:
-            sieve[i*i//2::i] = [False] * ((n-i*i-1)//(2*i)+1)
-    return [2] + [2*i+1 for i in range(1, n//2) if sieve[i]]
+            sieve[i*i>>1::i] = [False] * ((n-i*i-1)//(2*i)+1)
+    return [2] + [2*i+1 for i in range(1, n>>1) if sieve[i]]
 
 
 def primes_npsieve1(n):
-    """ Returns a array of primes, 3 <= p < n """
+    """ Using numpy, Returns a array of primes, 3 <= p < n 
+    
+    >>> primes_npsieve1(100)
+    [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
+
+    """
+    if n < 2:
+        return None
+
     sieve = numpy.ones(n//2, dtype=numpy.bool)
     for i in range(3, int(n**0.5)+1, 2):
         if sieve[i//2]:
             sieve[i*i//2::i] = False
-    return 2*numpy.nonzero(sieve)[0][1::]+1
+    return [2]+list(2*numpy.nonzero(sieve)[0][1::]+1)
 
 
 def primes_npsieve2(n):
-    """ Input n>=6, Returns a array of primes, 2 <= p < n """
+    """ Using numpy, Input n>=6, Returns a array of primes, 2 <= p < n 
+    
+    >>> primes_npsieve2(100)
+    [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
+
+    """
     sieve = numpy.ones(n//3 + (n%6==2), dtype=numpy.bool)
     for i in range(1, int(n**0.5)//3+1):
         if sieve[i]:
             k=3*i+1|1
             sieve[       k*k//3     ::2*k] = False
             sieve[k*(k-2*(i&1)+4)//3::2*k] = False
-    return numpy.r_[2,3,((3*numpy.nonzero(sieve)[0][1:]+1)|1)]
+    return list(numpy.r_[2,3,((3*numpy.nonzero(sieve)[0][1:]+1)|1)])
 
 
 def primes_npsieve3a(upto):
     """It sieves a Boolean array referring to its indices only and 
     elicits prime numbers from the indices of all True values. 
     No module needed.
+
+    >>> primes_npsieve3a(100)
+    [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
+
     """
     mat = np.ones((upto), dtype=bool)  # initial all postion True
     mat[0] = mat[1] = 0
@@ -278,13 +370,17 @@ def primes_npsieve3a(upto):
     upper = int(upto ** 0.5)
     for idx in range(3, upper + 1, 2):
         mat[idx*idx::idx] = 0  # reject the idx's multiple
-    return np.where(mat == 1)[0]
+    return list(np.where(mat == 1)[0])
 
 
 def primes_npsieve3b(upto):
     """It sieves a Boolean array referring to its indices only and 
     elicits prime numbers from the indices of all True values. 
     No module needed.
+
+    >>> primes_npsieve3b(100)
+    [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
+
     """
     mat = np.ones((upto), dtype=bool)  # initial all postion True
     mat[0] = mat[1] = 0
@@ -297,11 +393,16 @@ def primes_npsieve3b(upto):
     
     for idx in range(11, upper + 1, 2):
         mat[idx*idx::idx] = 0  # reject the idx's multiple
-    return np.where(mat == 1)[0]
+    return list(np.where(mat == 1)[0])
 
 
 def primes_npsieve6(upto):
-    """This is one of the best algorithm"""
+    """This is one of the best algorithm
+    
+    >>> primes_npsieve6(100)
+    [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
+
+    """
 
     # replace //2 for >>1, shift one bit
     primes=np.arange(3, upto+1, 2)  # odd series below upto
@@ -316,7 +417,7 @@ def primes_npsieve6(upto):
             isprime[3*((factor-1)>>1)::factor]=0
             # a*b//2=(a*b)//2 not equal to a*(b//2), eg 5*7//2!=5*(7//2)
 
-    return np.insert(primes[isprime], 0, 2)
+    return list(np.insert(primes[isprime], 0, 2))
     # np.insert statement cannot run under >>> command line
 
 
@@ -393,4 +494,5 @@ def is_prime_bakup(number):
 
 
 if __name__ == '__main__':
-    pass
+    import doctest
+    doctest.testmod()

@@ -6,9 +6,9 @@ Created on Sat May 12 21:33:11 2018
 Test Prime Package
 
 """
-from primespy import primes_generator, is_mersenne, number_of_digital
+from primespy import primes_generator, is_mersenne, digital_number
 from primespy import primes_sieve1, primes_nth, primes
-from primespy import rwh_primes2_python3, np_sieve_primes3a, np_sieve_primes3b, np_sieve_primes6
+from primespy import rwh_primes3, primes_npsieve3a, primes_npsieve3b, primes_npsieve6
 from primespy import rwh_primes2
 import time
 from  os import path as osp
@@ -44,7 +44,7 @@ def test_primes_generator(n):
         if is_mersenne(pm):  # Mesernne Prime Testing by Lucas_Lehmer_Test
             mp = 2**pm -1
             outfile.write("DC={d}, MP=2^{p}-1={mp} \n".format(
-                    d = number_of_digital(mp), p=pm, mp=mp)
+                    d = digital_number(mp), p=pm, mp=mp)
                 )
             print("MP=2^{p}-1={m} is Mersenne Prime!\n".format(
                     p=pm, m=2**pm-1)
@@ -101,27 +101,27 @@ if __name__ == '__main__':
     n = 10**8
 
     start = time.time()
-    result = rwh_primes2_python3(n)
+    result = rwh_primes3(n)
     end = time.time()
-    print("rwh_primes2_python3({n}), Time(s):{T}".format(n=n, T=end-start))
+    print("rwh_primes3({n}), Time(s):{T}".format(n=n, T=end-start))
     print("Primes count: {c} and sum: {s}".format(c=len(result), s=sum(result)))
     
     start = time.time()
-    result = np_sieve_primes3a(n)
+    result = primes_npsieve3a(n)
     end = time.time()
-    print("np_sieve_primes3a({n}), Time(s):{T}".format(n=n, T=end-start))
+    print("primes_npsieve3a({n}), Time(s):{T}".format(n=n, T=end-start))
     print("Primes count: {c} and sum: {s}".format(c=len(result), s=sum(result)))
     
     start = time.time()
-    result = np_sieve_primes3b(n)
+    result = primes_npsieve3b(n)
     end = time.time()
-    print("np_sieve_primes3b({n}), Time(s):{T}".format(n=n, T=end-start))
+    print("primes_npsieve3b({n}), Time(s):{T}".format(n=n, T=end-start))
     print("Primes count: {c} and sum: {s}".format(c=len(result), s=sum(result)))
     
     start = time.time()
-    result = np_sieve_primes6(n)
+    result = primes_npsieve6(n)
     end = time.time()
-    print("np_sieve_primes6({n}), Time(s):{T}".format(n=n, T=end-start))
+    print("primes_npsieve6({n}), Time(s):{T}".format(n=n, T=end-start))
     print("Primes count: {c} and sum: {s}".format(c=len(result), s=sum(result)))
 
     start = time.time()
