@@ -21,7 +21,7 @@ Functions
 including:
 1. general judge way: bool is_prime(N)  # prime detection
 2. Mersenne prime: bool is_mersenne(p)  # Lucas_Lehmer_Test(p) 梅森素数2**p-1判断法，p为素数
-3. generator for primes: primes_generator(start=2, limit=float("inf"))
+3. generator for primes: primes_generator(start=2, limit=float("inf"))  
 Property:
     p.prime = n 给定的正整数, p.flag 是否为素数？
 
