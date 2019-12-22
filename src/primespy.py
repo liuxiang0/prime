@@ -39,7 +39,7 @@ def rwh_primes2(n):
 
     """
     correction = (n%6 > 1)
-    n = {0:n, 1:n-1,2:n+4, 3:n+3, 4:n+2, 5:n+1}[n%6]
+    n = {0:n, 1:n-1, 2:n+4, 3:n+3, 4:n+2, 5:n+1}[n%6]
     sieve = [True] * (n//3)
     sieve[0] = False
     for i in range(int(n**0.5)//3 + 1):

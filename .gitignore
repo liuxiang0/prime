@@ -2,4 +2,4 @@
 src/__pycache__/
 .gitattributes
 .vscode/
-.idea/
+.idea/*.xml
