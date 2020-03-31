@@ -1,2 +1,5 @@
 .vscode/settings.json
-src/_pycache_
+src/__pycache__/
+.gitattributes
+.vscode/
+.idea/*.xml
