@@ -6,10 +6,10 @@ Created on Sat May 12 21:33:11 2018
 Test Prime Package
 
 """
-from primespy import primes_generator, is_mersenne, digital_number
-from primespy import primes_sieve1, primes_nth, primes
-from primespy import rwh_primes3, primes_npsieve3a, primes_npsieve3b, primes_npsieve6
-from primespy import rwh_primes2
+from pyprimes import primes_generator, is_mersenne, digital_number
+from pyprimes import primes_sieve1, primes_nth, primes
+from pyprimes import rwh_primes3, primes_npsieve3a, primes_npsieve3b, primes_npsieve6
+from pyprimes import rwh_primes2
 import time
 from  os import path as osp
 

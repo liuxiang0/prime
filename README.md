@@ -2,30 +2,30 @@
 Created on Sat May 12 21:33:29 2018  
 reviewed by: Liu Xiang  
 @email: liuxiangxyd@163.com  
-filename: primespy.py
+filename: pyprimes.py
 
-Functions
+**Functions**
 
-1. primes(n, filename=None): List of prime numbers from 2 up to n.
+1. `primes(n, filename=None)`: List of prime numbers from 2 up to n.
 
-2. primes_start(start, n, filename=None): List of prime numbers from start up to n.
+2. `primes_start(start, n, filename=None)`: List of prime numbers from start up to n.
 
-3. primes_sum_count(n): The summation of prime numbers from 2 up to n. The optimal number of threads will be determined for the given number and system.
+3. `primes_sum_count(n)`: The summation of prime numbers from 2 up to n. The optimal number of threads will be determined for the given number and system.
 
-4. primes_sum_count_start(start, n): The summation of prime numbers from start up to n. The optimal number of threads will be determined for the given numbers and system.
+4. `primes_sum_count_start(start, n)`: The summation of prime numbers from start up to n. The optimal number of threads will be determined for the given numbers and system.
 
-5. primes_nth(n): The nth prime number.
+5. `primes_nth(n)`: The nth prime number.
 
-6. factorize(n): List of tuples in the form of (prime, power) for the prime factorization of n.
+6. `factorize(n)`: List of tuples in the form of (prime, power) for the prime factorization of n.
 
 including:
-1. general judge way: bool is_prime(N)  # prime detection
-2. Mersenne prime: bool is_mersenne(p)  # Lucas_Lehmer_Test(p) 梅森素数2**p-1判断法，p为素数
-3. generator for primes: primes_generator(start=2, limit=float("inf"))  
+1. general judge way: `bool is_prime(N)`  # prime detection
+2. Mersenne prime: `bool is_mersenne(p)`  # Lucas_Lehmer_Test(p) 梅森素数2**p-1判断法，p为素数
+3. generator for primes: `primes_generator(start=2, limit=float("inf"))`  
 Property:
     p.prime = n 给定的正整数, p.flag 是否为素数？
 
-Method：  
+**Method：**
 ~~~python
 def  number_of_digital(self):   计算超大正整数n的位数  
      all_primes(self,start=2) :  大于start的质数无穷序列，generator of infinite primes list  
@@ -39,16 +39,17 @@ def sum_of_primes(self): 小于n的所有质数之和
 ## SymPy
 
 **SymPy** is another choice. It is a Python library for symbolic mathematics. It provides several functions for prime.
+
 Functions |Descriptions
 ----------|------------
-isprime(n)|# Test if n is a prime number (True) or not (False).
-primerange(a, b)|# Generate a list of all prime numbers in the range [a, b).
-randprime(a, b)|# Return a random prime number in the range [a, b).
-primepi(n)|# Return the number of prime numbers less than or equal to n.
-prime(nth)|# Return the nth prime, with the primes indexed as prime(1) = 2. The nth prime is approximately n*log(n) and can never be larger than 2**n.
-prevprime(n, ith=1)|# Return the largest prime smaller than n
-nextprime(n)|# Return the ith prime greater than n
-sieve.primerange(a, b)|# Generate all prime numbers in the range [a, b), implemented as a dynamically growing sieve of Eratosthenes. 
+isprime(n)  |# Test if n is a prime number (True) or not (False).
+primerange(a, b)  |# Generate a list of all prime numbers in the range [a, b).
+randprime(a, b)  |# Return a random prime number in the range [a, b).
+primepi(n)  |# Return the number of prime numbers less than or equal to n.
+prime(nth)  |# Return the nth prime, with the primes indexed as prime(1) = 2. The nth prime is approximately n*log(n) and can never be larger than 2**n.
+prevprime(n, ith=1)  |# Return the largest prime smaller than n
+nextprime(n)  |# Return the ith prime greater than n
+sieve.primerange(a, b)  |# Generate all prime numbers in the range [a, b), implemented as a dynamically growing sieve of Eratosthenes. 
 
 ## [Examples][2]
 

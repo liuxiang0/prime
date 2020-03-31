@@ -32,7 +32,7 @@ compress = itertools.compress
 
 
 def rwh_primes2(n):
-    """Return all primes list below n.
+    """Return all primes list up to n.
     
     >>> rwh_primes2(10)
     [2, 3, 5, 7]
@@ -176,25 +176,24 @@ def is_prime(N):
 
 
 def primes(n, filename=None):
-    """List all primes below n.
+    """List all primes up to n.
     
     >>> primes(10)
     [2, 3, 5, 7]
 
     """
 
-    pl = primes_generator(2, n)
-    if filename is None:
-        # print("Primes list (less than {p}) is below.".format(p=n))
-        result = list(pl)
-        # print(result)
-    else:
+    _pl = primes_generator(2, n)
+    _result = list(_pl)
+
+    if filename is not None:
         with open(filename,'w') as outf:
             outf.write("Primes list (less than {p}) is below.\n".format(p=n))
-            result = list(pl)
-            outf.write(str(result))
-            outf.close()
-    return result
+            outf.write(str(_result))
+            #outf.close()
+
+    return _result
+
 
 def primes_start(start, n, filename=None): 
     """List of prime numbers from start up to n.
@@ -204,19 +203,15 @@ def primes_start(start, n, filename=None):
 
     """
 
-    pl = primes_generator(start, n)
-    if filename is None:
-        # print("Primes list [{s},{e}).".format(s=start, e=n))
-        result = list(pl)
-        # print(result)
-    else:
+    _pL = primes_generator(start, n)
+    _Result = list(_pL)
+
+    if filename is not None:
         with open(filename,'w') as outf:
-            outf.write("Primes list [{s},{e}).\n".format(s=start, e=n))
-            result = list(pl)
-            outf.write(str(result))
-            outf.close()
+            outf.write("Primes list [{s},{e}].\n".format(s=start, e=n))
+            outf.write(str(_Result))
     
-    return result
+    return _Result
 
 
 def primes_sum_count(n):
@@ -224,14 +219,14 @@ def primes_sum_count(n):
     and count of prime numbers. 
     The optimal number of threads will be determined 
     for the given number and system.
-    return: sum of primes list and count of primes
+    return: (sum, count) -- sum of primes list and count of primes
 
     >>> primes_sum_count(10)
     (17, 4)
 
     """
-    pl = list(primes_generator(2, n))
-    return sum(pl), len(pl)
+    _pl = list(primes_generator(2, n))
+    return sum(_pl), len(_pl)
 
 
 def primes_sum_count_start(start, n):
@@ -244,8 +239,8 @@ def primes_sum_count_start(start, n):
     (60, 4)
 
     """
-    pl = list(primes_generator(start, n))
-    return sum(pl), len(pl)
+    _pl = list(primes_generator(start, n))
+    return sum(_pl), len(_pl)
 
 
 def primes_nth(n):
@@ -261,11 +256,12 @@ def primes_nth(n):
     1299709
     
     """
-    pl = primes_generator(2)
+    _pl = primes_generator(2)
     for _ in range(n-1):
-        next(pl)
-    return next(pl)
-    
+        next(_pl)
+    return next(_pl)
+
+
 # Several sieve algorithms for fingding primes list
 
 def primes_sieve1(limit):
@@ -446,6 +442,7 @@ def rwh_primes1v1(n):
             sieve[i*i//2::i] = bytearray((n-i*i-1)//(2*i)+1)
     return [2, *compress(range(3, n, 2), sieve[1:])]
 
+
 def rwh_primes1v2(n):
     """ Returns a list of primes < n for n > 2 """
     sieve = bytearray([True]) * (n//2+1)
@@ -478,18 +475,19 @@ def human_format(num):
     # add more suffixes if you need them
     return '%.2f%s' % (num, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
 
+
 def is_prime_bakup(number):
     """ 如果用 平方 和 while 循环，参见下面：
     """
     n = abs(number)
-    if n%2==0:
+    if not n%2:  # replace n%2==0:
         return n==2
 
     i = 3
     while i*i <= n:
         if not (n % i):  # replace n % i == 0:  
             return False
-        i += 2    # 偶数已经排除了，只判断奇数。奇数不可能有偶因子
+        i += 2  # 偶数已经排除了，只判断奇数。奇数不可能有偶因子
     return True
 
 
