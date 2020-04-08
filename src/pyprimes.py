@@ -9,6 +9,7 @@ Modified on Wed April 24 14:01 2019
 References:
 1. [The first fifty million primes][https://primes.utm.edu/lists/small/millions/]
 2. [The fastest way to list all primes below n][https://stackoverflow.com/questions/2068372/fastest-way-to-list-all-primes-below-n/3638617#3638617]
+3. [The prime pages](https://primes.utm.edu/)
 
 Comparisons with:
 import primesieve   (1)
@@ -29,6 +30,214 @@ from itertools import compress
 izip = itertools.zip_longest
 chain = itertools.chain.from_iterable
 compress = itertools.compress
+
+
+def is_prime(N: int)->bool:
+    """ 素数判断函数，True 是, False 否。
+    Input: any integer which is greater than 1.
+    Output: bool True represent integer is prime number.
+    不需要用math.sqrt()函数，也不用乘方(**0.5)，改用 i*i < N.
+    首先排除素数 2 和大于 2 的偶数
+    don't use math.sqrt，at first skip all even number except 2
+
+    >>> is_prime(2)
+    True
+
+    >>> is_prime(20)
+    False
+
+    >>> is_prime(-7)
+    True
+
+    """
+    number = N if N > 0 else -N
+    # 以下快速筛查2，3，5，7的倍数
+    if number%2 == 0:
+        return (number==2)  # 唯一的偶数2,-2是素数
+    if number%3 == 0:
+        return (number==3)  # 第一条语句已经清除了偶素数2，现在只要清除2以外的偶数
+    if number%5 == 0:
+        return (number==5)
+    if number%7 == 0:
+        return (number==7)
+    # upper = int(number ** 0.5)+1  # only one operation sqrt()
+    i = 11  # 起始数是奇数3，间隔为偶数2，就是判断3以后的奇数是否为素数？奇数不可能有偶因子
+    while i*i <= number:  # for i in range(11, upper, 2):
+        if not (number % i):  # replace number % i == 0:
+            return False  # 只要找到一个因数，就不是素数
+        i += 2
+
+    return True
+
+
+def is_mersenne(p: int) -> bool:
+    """梅森素数测试函数，2**p-1，此处 p 为素数。
+
+    : int p: a given prime
+    : routput: True if 2**p-1 is prime else False
+    判断 2**p-1是否为梅森素数Mersenne Prime，形如 2**p-1的素数，p为素数
+    Lucas_Lehmer_Test(p)
+
+    >>> is_mersenne(3)
+    True
+
+    >>> is_mersenne(5)
+    True
+
+    >>> is_mersenne(11)
+    False
+
+    """ 
+    if p == 2:  # special 2^2-1=3 is prime number
+        return True
+    
+    s = 4
+    M = 2**p - 1    
+    for _ in range(2, p):
+        s = (s*s - 2) % M
+
+    return not s
+
+
+def primes_generator(start=2, limit=float("inf")):
+    """ Generate a prime array - 素数迭代生成器
+    input: given the starting integer
+    output: generate the infinite primes with yield(generator) command
+    素数生成器prime generator，得到无限质数序列，从start开始！
+    include 区间素数生成器，得到 start 与 limit 之间 [start,limit) 闭区间的质数序列
+
+    >>> list(primes_generator(2,20))
+    [2, 3, 5, 7, 11, 13, 17, 19]
+
+    """
+    s = start  # start variable will not changed
+    while True and s < limit:
+        if is_prime(s):
+            yield s
+        s += 1  
+
+
+def primes_n(count: int)->list:
+    """ List the first 'count' primes >= 2
+    
+    >>> primes_n(20)
+    [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71]
+    
+    """
+    _pl = primes_generator()
+    prime = []
+    for _ in range(count):
+        prime.append(next(_pl))
+    
+    return prime
+
+
+def primes_nth(n: int)->int:
+    """ Find the n-th prime.
+
+    >>> primes_nth(7)
+    17
+
+    >>> primes_nth(10000)
+    104729
+    
+    >>> primes_nth(100000)
+    1299709
+
+    >>> primes_nth(20)
+    71
+
+    >>> primes_nth(120)
+    659
+
+    >>> primes_nth(12000)
+    128189
+
+    >>> primes_nth(120000)
+    1583539
+
+    >>> primes_nth(200000)
+    2750159
+    """
+    _pl = primes_generator(2)
+    for _ in range(n-1):
+        next(_pl)
+    return next(_pl)
+
+
+def primes(n, filename=None):
+    """ Generate primes list up to n. and save to filename
+    
+    >>> primes(10)
+    [2, 3, 5, 7]
+
+    """
+
+    _pl = primes_generator(2, n)
+    _result = list(_pl)
+
+    if filename is not None:
+        with open(filename,'w') as outf:
+            outf.write("Primes list (less than {p}) is below.\n".format(p=n))
+            outf.write(str(_result))
+            #outf.close()
+
+    return _result
+
+
+def primes_between(start, n, filename=None): 
+    """List of primes from start up to n and save to filename.
+    
+    >>> primes_between(10, 20)
+    [11, 13, 17, 19]
+
+    >>> primes_between(100,200)
+    [101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199]
+
+    """
+
+    _pL = primes_generator(start, n)
+    _Result = list(_pL)
+
+    if filename is not None:
+        with open(filename,'w') as outf:
+            outf.write("Primes list which is between [{s},{e}).\n".format(s=start, e=n))
+            outf.write(str(_Result))
+
+    return _Result
+
+
+def primes_sum_count(n):
+    """ 返回素数之和以及素数个数，针对小于给定数的所有素数
+    The summation of prime numbers from 2 up to n, 
+    and count of prime numbers. 
+    The optimal number of threads will be determined 
+    for the given number and system.
+    return: (sum, count) -- sum of primes list and count of primes
+
+    >>> primes_sum_count(10)
+    (17, 4)
+
+    """
+    _pl = list(primes_generator(2, n))
+    return sum(_pl), len(_pl)
+
+
+def primes_sum_count_between(start, n):
+    """The summation of prime numbers from start up to n,
+    and count of prime numbers. 
+    The optimal number of threads will be determined 
+    for the given numbers and system.
+
+    >>> primes_sum_count_between(10, 20)
+    (60, 4)
+
+    >>> primes_sum_count_between(10,200)
+    (4210, 42)
+
+    """
+    _pl = list(primes_generator(start, n))
+    return sum(_pl), len(_pl)
 
 
 def rwh_primes2(n):
@@ -74,8 +283,7 @@ def rwh_primes3(n):
 
 
 def digital_number(any_integer):
-    """
-    获取一个正整数的数字个数.
+    """ 获取一个正整数的数字个数.
     原理： 10**(d-1) <= n < 10**d, 表明n有 d个数字
     换算成log10， 得到 d-1 <= log(n) < d, log(n)< d <= log(n)+1
 
@@ -90,176 +298,6 @@ def digital_number(any_integer):
     if not n:  # 排除零，实际上可以产生一个ValueError
         return 1
     return int(log(n)) + 1
-
-
-def is_mersenne(p):
-    """
-    input: any one prime
-    output: True if 2**p-1 is prime else False
-    判断 2**p-1是否为梅森素数Mersenne Prime，形如 2**p-1的素数，p为素数
-    Lucas_Lehmer_Test(p)
-
-    >>> is_mersenne(3)
-    True
-
-    >>> is_mersenne(5)
-    True
-
-    >>> is_mersenne(11)
-    False
-
-    """
- 
-    s = 4
-    M = 2**p - 1
-    for _ in range(2, p):
-        s = (s*s - 2) % M
-
-    return not s
-
-
-def primes_generator(start=2, limit=float("inf")):
-    """
-    input: given the first prime
-    output: generate the infinite primes with yield(generator)
-    素数生成器prime generator，得到无限质数序列，从start开始！
-    include区间素数生成器，得到start与limit之间[start,limit)闭区间的质数序列
-
-    >>> list(primes_generator(2,20))
-    [2, 3, 5, 7, 11, 13, 17, 19]
-
-    """
-    s = start  # start variable will not changed
-    while True and s < limit:
-        if is_prime(s):
-            yield s
-        s += 1  
-
-
-def is_prime(N):
-    """
-    Input: any integer which is greater than 1.
-    Output: bool True represent integer is prime number.
-    素数判断函数，返回True时为质数，否则不是!
-    不需要用math.sqrt()函数，改用乘方(**0.5)代替开方sqrt()，
-    首先排除素数2和大于2的偶数
-    don't use math.sqrt，at first skip all even number except 2
-
-    >>> is_prime(2)
-    True
-
-    >>> is_prime(20)
-    False
-
-    >>> is_prime(-7)
-    True
-
-    """
-    number = abs(N)
-    if number%2 == 0:
-        return (number==2)  # 唯一的偶数2,-2是素数
-    if number%3 == 0:
-        return (number==3)  # 第一条语句已经清除了偶素数2，现在只要清除除2以外的偶数
-    # 起始数是奇数3，间隔为偶数2，就是判断3以后的奇数是否为素数？奇数不可能有偶因子
-    if number%5 == 0:
-        return (number==5)
-    if number%7 == 0:
-        return (number==7)
-    # upper = int(number ** 0.5)+1  # only one operation sqrt()
-    i = 11
-    while i*i <= number:  # for i in range(11, upper, 2):
-        if not (number % i):  # replace number % i == 0:
-            return False  # 只要能找到一个
-        i += 2
-
-    return True
-
-
-def primes(n, filename=None):
-    """List all primes up to n.
-    
-    >>> primes(10)
-    [2, 3, 5, 7]
-
-    """
-
-    _pl = primes_generator(2, n)
-    _result = list(_pl)
-
-    if filename is not None:
-        with open(filename,'w') as outf:
-            outf.write("Primes list (less than {p}) is below.\n".format(p=n))
-            outf.write(str(_result))
-            #outf.close()
-
-    return _result
-
-
-def primes_start(start, n, filename=None): 
-    """List of prime numbers from start up to n.
-    
-    >>> primes_start(10, 20)
-    [11, 13, 17, 19]
-
-    """
-
-    _pL = primes_generator(start, n)
-    _Result = list(_pL)
-
-    if filename is not None:
-        with open(filename,'w') as outf:
-            outf.write("Primes list [{s},{e}].\n".format(s=start, e=n))
-            outf.write(str(_Result))
-    
-    return _Result
-
-
-def primes_sum_count(n):
-    """The summation of prime numbers from 2 up to n, 
-    and count of prime numbers. 
-    The optimal number of threads will be determined 
-    for the given number and system.
-    return: (sum, count) -- sum of primes list and count of primes
-
-    >>> primes_sum_count(10)
-    (17, 4)
-
-    """
-    _pl = list(primes_generator(2, n))
-    return sum(_pl), len(_pl)
-
-
-def primes_sum_count_start(start, n):
-    """The summation of prime numbers from start up to n,
-    and count of prime numbers. 
-    The optimal number of threads will be determined 
-    for the given numbers and system.
-
-    >>> primes_sum_count_start(10, 20)
-    (60, 4)
-
-    """
-    _pl = list(primes_generator(start, n))
-    return sum(_pl), len(_pl)
-
-
-def primes_nth(n):
-    """The nth prime number.
-
-    >>> primes_nth(7)
-    17
-
-    >>> primes_nth(10000)
-    104729
-    
-    >>> primes_nth(100000)
-    1299709
-    
-    """
-    _pl = primes_generator(2)
-    for _ in range(n-1):
-        next(_pl)
-    return next(_pl)
 
 
 # Several sieve algorithms for fingding primes list
@@ -317,6 +355,7 @@ def primes_sieve3(n):
     return [2] + [2*i+1 for i in range(1, n>>1) if sieve[i]]
 
 
+# the following sieve functions by using numpy module
 def primes_npsieve1(n):
     """ Using numpy, Returns a array of primes, 3 <= p < n 
     
@@ -477,18 +516,21 @@ def human_format(num):
 
 
 def is_prime_bakup(number):
-    """ 如果用 平方 和 while 循环，参见下面：
+    """ 采用 平方 和 while 循环 来判断是否为素数
+
     """
-    n = abs(number)
+    n = number if number>0 else -number
     if not n%2:  # replace n%2==0:
         return n==2
 
     i = 3
+    prime = True
     while i*i <= n:
         if not (n % i):  # replace n % i == 0:  
-            return False
+            prime = False
+            break  # skip the while-loop
         i += 2  # 偶数已经排除了，只判断奇数。奇数不可能有偶因子
-    return True
+    return prime
 
 
 if __name__ == '__main__':

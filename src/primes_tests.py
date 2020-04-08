@@ -52,7 +52,6 @@ def test_primes_generator(n):
     
     outfile.write("Finished, time = %s \n" % time.strftime("%Y-%m-%d %H:%M:%S"))
     outfile.write("Finished, elasped(s): %d. \n " % (time.time()-start))
-    
     outfile.close()
 
 
@@ -90,13 +89,11 @@ def test_primes(n):
 # test data        
 if __name__ == '__main__':
     n = 10**5
+
     test_primes_sieve1(n)
-    
     test_primes_nth(n)
     test_primes(n)
-    
     test_primes_generator(n)
-
 
     n = 10**8
 

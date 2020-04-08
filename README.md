@@ -1,29 +1,25 @@
-# Fastest way to list all primes below N
+# Fastest way to list all primes up to N
+
 Created on Sat May 12 21:33:29 2018  
 reviewed by: Liu Xiang  
 @email: liuxiangxyd@163.com  
 filename: pyprimes.py
 
-**Functions**
+## **Functions**
+
+pyprimes module provides the following functions:
 
 1. `primes(n, filename=None)`: List of prime numbers from 2 up to n.
-
-2. `primes_start(start, n, filename=None)`: List of prime numbers from start up to n.
-
+2. `primes_between(start, n, filename=None)`: List of prime numbers from start up to n.
 3. `primes_sum_count(n)`: The summation of prime numbers from 2 up to n. The optimal number of threads will be determined for the given number and system.
+4. `primes_sum_count_between(start, n)`: The summation of prime numbers from start up to n. The optimal number of threads will be determined for the given numbers and system.
+5. `primes_nth(n)`: Find the n-th prime.
+6. `prime_n(n)`: List the first 'n' primes >= 2   
+7. `factorize(n)`: List of tuples in the form of (prime, power) for the prime factorization of n.
+8. `bool is_prime(N)`: prime detection.
+9. `bool is_mersenne(p)`: Mersenne prime detection,  Lucas_Lehmer_Test(p) 梅森素数2**p-1判断法，p为素数.
+10. `iteration primes_generator(start=2, limit=float("inf"))`: Primes generator, iterate all primes between start and limit.
 
-4. `primes_sum_count_start(start, n)`: The summation of prime numbers from start up to n. The optimal number of threads will be determined for the given numbers and system.
-
-5. `primes_nth(n)`: The nth prime number.
-
-6. `factorize(n)`: List of tuples in the form of (prime, power) for the prime factorization of n.
-
-including:
-1. general judge way: `bool is_prime(N)`  # prime detection
-2. Mersenne prime: `bool is_mersenne(p)`  # Lucas_Lehmer_Test(p) 梅森素数2**p-1判断法，p为素数
-3. generator for primes: `primes_generator(start=2, limit=float("inf"))`  
-Property:
-    p.prime = n 给定的正整数, p.flag 是否为素数？
 
 **Method：**
 ~~~python
@@ -85,3 +81,4 @@ sieve.primerange(a, b)  |# Generate all prime numbers in the range [a, b), imple
 
 [1]:https://stackoverflow.com/questions/2068372/fastest-way-to-list-all-primes-below-n/33356284#33356284
 [2]:https://stackoverflow.com/questions/13326673/is-there-a-python-library-to-list-primes
+[3]:https://primes.utm.edu/
