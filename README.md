@@ -23,7 +23,7 @@ pyprimes module provides the following functions:
 
 **Method：**
 ~~~python
-def  number_of_digital(self):   计算超大正整数n的位数  
+def  number_of_digital(self) :   计算超大正整数n的位数  
      all_primes(self,start=2) :  大于start的质数无穷序列，generator of infinite primes list  
      primes_between(self,start=2,end=5) : 得到[start,end]之间的质数序列，generator  
      count_of_primes(self) : 小于n的质数个数（计数）  
